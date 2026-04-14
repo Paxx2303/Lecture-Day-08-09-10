@@ -1,0 +1,107 @@
+{
+  "task": "Nhân viên vừa vào thử việc (trong probation period) muốn làm remote vì lý do cá nhân. Điều kiện là gì?",
+  "route_reason": "no specific keyword matched → default retrieval",
+  "risk_high": false,
+  "needs_tool": false,
+  "hitl_triggered": false,
+  "retrieved_chunks": [
+    {
+      "text": "4.1 Điều kiện remote:\n- Nhân viên sau probation period có thể làm remote tối đa 2 ngày/tuần.\n- Team Lead phải phê duyệt lịch remote qua HR Portal.\n- Ngày onsite bắt buộc: Thứ 3 và Thứ 5 theo lịch team.\n\n4.2 Yêu cầu kỹ thuật khi remote:\n- Kết nối VPN bắt buộc khi làm việc với hệ thống nội bộ.\n- Camera bật trong các cuộc họp team.",
+      "source": "hr/leave-policy-2026.pdf",
+      "score": 0.2939,
+      "metadata": {
+        "source": "hr/leave-policy-2026.pdf",
+        "effective_date": "2026-01-01",
+        "access": "internal",
+        "department": "HR",
+        "section": "Phần 4: Remote work policy"
+      }
+    },
+    {
+      "text": "1.1 Nghỉ phép năm (Annual Leave):\n- Số ngày: 12 ngày/năm cho nhân viên dưới 3 năm kinh nghiệm.\n- Số ngày: 15 ngày/năm cho nhân viên từ 3-5 năm kinh nghiệm.\n- Số ngày: 18 ngày/năm cho nhân viên trên 5 năm kinh nghiệm.\n- Chuyển năm sau: Tối đa 5 ngày phép năm chưa dùng được chuyển sang năm tiếp theo.\n\n1.2 Nghỉ ốm (Sick Leave):\n- Số ngày: 10 ngày/năm có trả lương.\n- Yêu cầu: Thông báo cho Line Manager trước 9:00 sáng ngày nghỉ.\n- Nếu nghỉ trên 3 ngày liên tiếp: Cần giấy tờ y tế từ bệnh viện.\n\n1.3 Nghỉ thai sản:\n- Nghỉ sinh con: 6 tháng theo quy định Luật Lao động.\n- Nghỉ nuôi con nhỏ: 1 tiếng/ngày trong 12 tháng đầu sau sinh.\n\n1.4 Nghỉ lễ tết:\nTheo lịch nghỉ lễ quốc gia do HR công bố hàng năm vào tháng 12.",
+      "source": "hr/leave-policy-2026.pdf",
+      "score": 0.2128,
+      "metadata": {
+        "effective_date": "2026-01-01",
+        "source": "hr/leave-policy-2026.pdf",
+        "department": "HR",
+        "access": "internal",
+        "section": "Phần 1: Các loại nghỉ phép"
+      }
+    },
+    {
+      "text": "Khách hàng được quyền yêu cầu hoàn tiền khi đáp ứng đủ các điều kiện sau:\n- Sản phẩm bị lỗi do nhà sản xuất, không phải do người dùng.\n- Yêu cầu được gửi trong vòng 7 ngày làm việc kể từ thời điểm xác nhận đơn hàng.\n- Đơn hàng chưa được sử dụng hoặc chưa bị mở seal.",
+      "source": "policy/refund-v4.pdf",
+      "score": 0.2106,
+      "metadata": {
+        "access": "internal",
+        "effective_date": "2026-02-01",
+        "department": "CS",
+        "source": "policy/refund-v4.pdf",
+        "section": "Điều 2: Điều kiện được hoàn tiền"
+      }
+    }
+  ],
+  "retrieved_sources": [
+    "hr/leave-policy-2026.pdf",
+    "policy/refund-v4.pdf"
+  ],
+  "policy_result": {},
+  "mcp_tools_used": [],
+  "final_answer": "Nhân viên trong probation period không đủ điều kiện để làm remote. Theo quy định, chỉ nhân viên sau probation period mới có thể làm remote tối đa 2 ngày/tuần, và cần có sự phê duyệt của Team Lead qua HR Portal [1].",
+  "sources": [
+    "hr/leave-policy-2026.pdf",
+    "policy/refund-v4.pdf"
+  ],
+  "confidence": 0.24,
+  "history": [
+    "[supervisor] received task: Nhân viên vừa vào thử việc (trong probation period) muốn làm remote vì lý do cá ",
+    "[supervisor] decision: route=retrieval_worker | needs_tool=False | risk_high=False | reason=no specific keyword matched → default retrieval",
+    "[retrieval_worker] retrieved 3 chunks from ['hr/leave-policy-2026.pdf', 'policy/refund-v4.pdf']",
+    "[synthesis_worker] answer generated, confidence=0.24, sources=['hr/leave-policy-2026.pdf', 'policy/refund-v4.pdf']",
+    "[graph] ✅ completed | route=retrieval_worker | workers=['retrieval_worker', 'synthesis_worker'] | latency=6572ms"
+  ],
+  "workers_called": [
+    "retrieval_worker",
+    "synthesis_worker"
+  ],
+  "supervisor_route": "retrieval_worker",
+  "latency_ms": 6572,
+  "run_id": "run_20260414_163103_1503",
+  "timestamp": "2026-04-14T16:31:03.150374",
+  "worker_io_logs": [
+    {
+      "worker": "retrieval_worker",
+      "input": {
+        "task": "Nhân viên vừa vào thử việc (trong probation period) muốn làm remote vì lý do cá nhân. Điều kiện là gì?",
+        "top_k": 3
+      },
+      "output": {
+        "chunks_count": 3,
+        "sources": [
+          "hr/leave-policy-2026.pdf",
+          "policy/refund-v4.pdf"
+        ]
+      },
+      "error": null
+    },
+    {
+      "worker": "synthesis_worker",
+      "input": {
+        "task": "Nhân viên vừa vào thử việc (trong probation period) muốn làm remote vì lý do cá nhân. Điều kiện là gì?",
+        "chunks_count": 3,
+        "has_policy": false
+      },
+      "output": {
+        "answer_length": 214,
+        "sources": [
+          "hr/leave-policy-2026.pdf",
+          "policy/refund-v4.pdf"
+        ],
+        "confidence": 0.24
+      },
+      "error": null
+    }
+  ],
+  "question_id": "q14"
+}

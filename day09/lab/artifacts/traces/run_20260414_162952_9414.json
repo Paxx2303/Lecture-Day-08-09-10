@@ -1,0 +1,138 @@
+{
+  "task": "Khách hàng có thể yêu cầu hoàn tiền trong bao nhiêu ngày?",
+  "route_reason": "policy_keywords=['hoàn tiền']",
+  "risk_high": false,
+  "needs_tool": true,
+  "hitl_triggered": false,
+  "retrieved_chunks": [
+    {
+      "text": "Level 1 — Read Only:\nÁp dụng cho: Tất cả nhân viên mới trong 30 ngày đầu.\nPhê duyệt: Line Manager.\nThời gian xử lý: 1 ngày làm việc.\n\nLevel 2 — Standard Access:\nÁp dụng cho: Nhân viên chính thức đã qua thử việc.\nPhê duyệt: Line Manager + IT Admin.\nThời gian xử lý: 2 ngày làm việc.\n\nLevel 3 — Elevated Access:\nÁp dụng cho: Team Lead, Senior Engineer, Manager.\nPhê duyệt: Line Manager + IT Admin + IT Security.\nThời gian xử lý: 3 ngày làm việc.\n\nLevel 4 — Admin Access:\nÁp dụng cho: DevOps, SRE, IT Admin.\nPhê duyệt: IT Manager + CISO.\nThời gian xử lý: 5 ngày làm việc.\nYêu cầu thêm: Training bắt buộc về security policy.",
+      "source": "it/access-control-sop.md",
+      "score": 0.0931,
+      "metadata": {
+        "department": "IT Security",
+        "source": "it/access-control-sop.md",
+        "access": "internal",
+        "effective_date": "2026-01-01",
+        "section": "Section 2: Phân cấp quyền truy cập"
+      }
+    },
+    {
+      "text": "Q: Tôi quên mật khẩu, phải làm gì?\nA: Truy cập https://sso.company.internal/reset hoặc liên hệ Helpdesk qua ext. 9000. Mật khẩu mới sẽ được gửi qua email công ty trong vòng 5 phút.\n\nQ: Tài khoản bị khóa sau bao nhiêu lần đăng nhập sai?\nA: Tài khoản bị khóa sau 5 lần đăng nhập sai liên tiếp. Để mở khóa, liên hệ IT Helpdesk hoặc tự reset qua portal SSO.\n\nQ: Mật khẩu cần thay đổi định kỳ không?\nA: Có. Mật khẩu phải được thay đổi mỗi 90 ngày. Hệ thống sẽ nhắc nhở 7 ngày trước khi hết hạn.",
+      "source": "support/helpdesk-faq.md",
+      "score": 0.077,
+      "metadata": {
+        "department": "IT",
+        "source": "support/helpdesk-faq.md",
+        "effective_date": "2026-01-20",
+        "section": "Section 1: Tài khoản và mật khẩu",
+        "access": "internal"
+      }
+    },
+    {
+      "text": "Email: hr@company.internal\nHotline: ext. 2000\nHR Portal: https://hr.company.internal\nGiờ làm việc: Thứ 2 - Thứ 6, 8:30 - 17:30",
+      "source": "hr/leave-policy-2026.pdf",
+      "score": 0.0756,
+      "metadata": {
+        "access": "internal",
+        "source": "hr/leave-policy-2026.pdf",
+        "section": "Phần 5: Liên hệ HR",
+        "department": "HR",
+        "effective_date": "2026-01-01"
+      }
+    }
+  ],
+  "retrieved_sources": [
+    "hr/leave-policy-2026.pdf",
+    "it/access-control-sop.md",
+    "support/helpdesk-faq.md"
+  ],
+  "policy_result": {
+    "policy_applies": true,
+    "policy_name": "refund_policy_v4",
+    "exceptions_found": [],
+    "source": [
+      "hr/leave-policy-2026.pdf",
+      "it/access-control-sop.md",
+      "support/helpdesk-faq.md"
+    ],
+    "policy_version_note": "",
+    "explanation": "Rule-based check: 0 exception(s) found. policy_applies=True có nghĩa hoàn tiền được chấp nhận theo điều kiện bình thường."
+  },
+  "mcp_tools_used": [],
+  "final_answer": "Không đủ thông tin trong tài liệu nội bộ.",
+  "sources": [
+    "hr/leave-policy-2026.pdf",
+    "it/access-control-sop.md",
+    "support/helpdesk-faq.md"
+  ],
+  "confidence": 0.3,
+  "history": [
+    "[supervisor] received task: Khách hàng có thể yêu cầu hoàn tiền trong bao nhiêu ngày?",
+    "[supervisor] decision: route=policy_tool_worker | needs_tool=True | risk_high=False | reason=policy_keywords=['hoàn tiền']",
+    "[retrieval_worker] retrieved 3 chunks from ['hr/leave-policy-2026.pdf', 'it/access-control-sop.md', 'support/helpdesk-faq.md']",
+    "[policy_tool_worker] policy_applies=True, exceptions=0, mcp_calls=0",
+    "[synthesis_worker] answer generated, confidence=0.3, sources=['hr/leave-policy-2026.pdf', 'it/access-control-sop.md', 'support/helpdesk-faq.md']",
+    "[graph] ✅ completed | route=policy_tool_worker | workers=['retrieval_worker', 'policy_tool_worker', 'synthesis_worker'] | latency=5336ms"
+  ],
+  "workers_called": [
+    "retrieval_worker",
+    "policy_tool_worker",
+    "synthesis_worker"
+  ],
+  "supervisor_route": "policy_tool_worker",
+  "latency_ms": 5336,
+  "run_id": "run_20260414_162952_9414",
+  "timestamp": "2026-04-14T16:29:52.941459",
+  "worker_io_logs": [
+    {
+      "worker": "retrieval_worker",
+      "input": {
+        "task": "Khách hàng có thể yêu cầu hoàn tiền trong bao nhiêu ngày?",
+        "top_k": 3
+      },
+      "output": {
+        "chunks_count": 3,
+        "sources": [
+          "hr/leave-policy-2026.pdf",
+          "it/access-control-sop.md",
+          "support/helpdesk-faq.md"
+        ]
+      },
+      "error": null
+    },
+    {
+      "worker": "policy_tool_worker",
+      "input": {
+        "task": "Khách hàng có thể yêu cầu hoàn tiền trong bao nhiêu ngày?",
+        "chunks_count": 3,
+        "needs_tool": true
+      },
+      "output": {
+        "policy_applies": true,
+        "exceptions_count": 0,
+        "mcp_calls": 0
+      },
+      "error": null
+    },
+    {
+      "worker": "synthesis_worker",
+      "input": {
+        "task": "Khách hàng có thể yêu cầu hoàn tiền trong bao nhiêu ngày?",
+        "chunks_count": 3,
+        "has_policy": true
+      },
+      "output": {
+        "answer_length": 41,
+        "sources": [
+          "hr/leave-policy-2026.pdf",
+          "it/access-control-sop.md",
+          "support/helpdesk-faq.md"
+        ],
+        "confidence": 0.3
+      },
+      "error": null
+    }
+  ],
+  "question_id": "q02"
+}

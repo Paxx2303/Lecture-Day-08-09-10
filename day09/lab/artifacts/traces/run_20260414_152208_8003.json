@@ -1,0 +1,60 @@
+{
+  "task": "Hệ thống báo lỗi ERR-4521 và không rõ nguyên nhân — phải làm gì?",
+  "route_reason": "unknown_error_code + risk_high → human review required [risk_keywords=['không rõ'] | unknown_error_code_detected] | risk_keywords=['không rõ'] | unknown_error_code_detected | human_approved → retrieval_worker",
+  "risk_high": true,
+  "needs_tool": false,
+  "hitl_triggered": true,
+  "retrieved_chunks": [],
+  "retrieved_sources": [],
+  "policy_result": {},
+  "mcp_tools_used": [],
+  "final_answer": "Không đủ thông tin trong tài liệu nội bộ.",
+  "sources": [],
+  "confidence": 0.1,
+  "history": [
+    "[supervisor] received task: Hệ thống báo lỗi ERR-4521 và không rõ nguyên nhân — phải làm gì?",
+    "[supervisor] decision: route=human_review | needs_tool=False | risk_high=True | reason=unknown_error_code + risk_high → human review required [risk_keywords=['không rõ'] | unknown_error_code_detected] | risk_keywords=['không rõ'] | unknown_error_code_detected",
+    "[human_review] HITL triggered — awaiting human input (lab: auto-approve)",
+    "[human_review] auto-approved → routing to retrieval_worker",
+    "[retrieval_worker] retrieved 0 chunks from []",
+    "[synthesis_worker] answer generated, confidence=0.1, sources=[]",
+    "[graph] ✅ completed | route=retrieval_worker | workers=['human_review', 'retrieval_worker', 'synthesis_worker'] | latency=5926ms"
+  ],
+  "workers_called": [
+    "human_review",
+    "retrieval_worker",
+    "synthesis_worker"
+  ],
+  "supervisor_route": "retrieval_worker",
+  "latency_ms": 5926,
+  "run_id": "run_20260414_152208_8003",
+  "timestamp": "2026-04-14T15:22:08.800332",
+  "worker_io_logs": [
+    {
+      "worker": "retrieval_worker",
+      "input": {
+        "task": "Hệ thống báo lỗi ERR-4521 và không rõ nguyên nhân — phải làm gì?",
+        "top_k": 3
+      },
+      "output": {
+        "chunks_count": 0,
+        "sources": []
+      },
+      "error": null
+    },
+    {
+      "worker": "synthesis_worker",
+      "input": {
+        "task": "Hệ thống báo lỗi ERR-4521 và không rõ nguyên nhân — phải làm gì?",
+        "chunks_count": 0,
+        "has_policy": false
+      },
+      "output": {
+        "answer_length": 41,
+        "sources": [],
+        "confidence": 0.1
+      },
+      "error": null
+    }
+  ]
+}

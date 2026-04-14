@@ -18,24 +18,32 @@ Gọi độc lập để test:
 import os
 import sys
 
-# ─────────────────────────────────────────────
-# Worker Contract (xem contracts/worker_contracts.yaml)
-# Input:  {"task": str, "top_k": int = 3}
-# Output: {"retrieved_chunks": list, "retrieved_sources": list, "error": dict | None}
-# ─────────────────────────────────────────────
+# ── Sprint 2 fix: đảm bảo .env được load khi chạy độc lập ──────────
+try:
+    from dotenv import load_dotenv
+    # Tìm .env từ thư mục gốc project (lab/) dù chạy từ workers/
+    _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    load_dotenv(os.path.join(_root, ".env"))
+except ImportError:
+    pass
 
 WORKER_NAME = "retrieval_worker"
 DEFAULT_TOP_K = 3
+
+# ── Sprint 2 fix: tên collection đồng nhất với index script ─────────
+CHROMA_COLLECTION = "rag_lab"
+CHROMA_PATH = "./chroma_db"
 
 
 def _get_embedding_fn():
     """
     Trả về embedding function.
-    TODO Sprint 1: Implement dùng OpenAI hoặc Sentence Transformers.
+    Ưu tiên: Sentence Transformers → OpenAI → random (test only).
     """
     # Option A: Sentence Transformers (offline, không cần API key)
     try:
         from sentence_transformers import SentenceTransformer
+        print("[retrieval] Loading Sentence Transformers model...")
         model = SentenceTransformer("all-MiniLM-L6-v2")
         def embed(text: str) -> list:
             return model.encode([text])[0].tolist()
@@ -43,85 +51,104 @@ def _get_embedding_fn():
     except ImportError:
         pass
 
-    # Option B: OpenAI (cần API key)
+    # Option B: OpenAI embeddings
     try:
         from openai import OpenAI
         client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         def embed(text: str) -> list:
             resp = client.embeddings.create(input=text, model="text-embedding-3-small")
             return resp.data[0].embedding
+        print("[retrieval] Using OpenAI embeddings.")
         return embed
     except ImportError:
         pass
 
-    # Fallback: random embeddings cho test (KHÔNG dùng production)
+    # Fallback: random embeddings (KHÔNG dùng production)
     import random
+    print("⚠️  WARNING: Using random embeddings (test only). Install sentence-transformers.")
     def embed(text: str) -> list:
         return [random.random() for _ in range(384)]
-    print("⚠️  WARNING: Using random embeddings (test only). Install sentence-transformers.")
     return embed
 
 
 def _get_collection():
     """
-    Kết nối ChromaDB collection.
-    TODO Sprint 2: Đảm bảo collection đã được build từ Step 3 trong README.
+    Kết nối ChromaDB collection 'day09_docs'.
+    Nếu chưa có data → in warning rõ ràng.
+
+    Sprint 2 fix: đồng nhất tên collection, resolve path từ gốc project.
     """
     import chromadb
-    client = chromadb.PersistentClient(path="./chroma_db")
+
+    # Resolve path tương đối từ gốc project (lab/) thay vì CWD
+    _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    chroma_path = os.path.join(_root, "chroma_db")
+
+    client = chromadb.PersistentClient(path=chroma_path)
+
     try:
-        collection = client.get_collection("day09_docs")
+        collection = client.get_collection(CHROMA_COLLECTION)
+        count = collection.count()
+        if count == 0:
+            print(f"⚠️  Collection '{CHROMA_COLLECTION}' rỗng. Chạy index script trước.")
+        return collection
     except Exception:
-        # Auto-create nếu chưa có
+        # Collection chưa tồn tại → tạo mới và báo lỗi rõ
         collection = client.get_or_create_collection(
-            "day09_docs",
+            CHROMA_COLLECTION,
             metadata={"hnsw:space": "cosine"}
         )
-        print(f"⚠️  Collection 'day09_docs' chưa có data. Chạy index script trong README trước.")
-    return collection
+        print(
+            f"⚠️  Collection '{CHROMA_COLLECTION}' chưa có data.\n"
+            f"    Chạy lệnh index trong README (Step 3) để build index trước."
+        )
+        return collection
 
 
 def retrieve_dense(query: str, top_k: int = DEFAULT_TOP_K) -> list:
     """
     Dense retrieval: embed query → query ChromaDB → trả về top_k chunks.
 
-    TODO Sprint 2: Implement phần này.
-    - Dùng _get_embedding_fn() để embed query
-    - Query collection với n_results=top_k
-    - Format result thành list of dict
-
     Returns:
         list of {"text": str, "source": str, "score": float, "metadata": dict}
     """
-    # TODO: Implement dense retrieval
     embed = _get_embedding_fn()
     query_embedding = embed(query)
 
     try:
         collection = _get_collection()
+
+        # Kiểm tra collection có data không
+        count = collection.count()
+        if count == 0:
+            print(f"⚠️  ChromaDB rỗng — returning empty (cần chạy index script).")
+            return []
+
+        # n_results không được vượt quá số docs trong collection
+        actual_top_k = min(top_k, count)
+
         results = collection.query(
             query_embeddings=[query_embedding],
-            n_results=top_k,
+            n_results=actual_top_k,
             include=["documents", "distances", "metadatas"]
         )
 
         chunks = []
-        for i, (doc, dist, meta) in enumerate(zip(
+        for doc, dist, meta in zip(
             results["documents"][0],
             results["distances"][0],
             results["metadatas"][0]
-        )):
+        ):
             chunks.append({
                 "text": doc,
                 "source": meta.get("source", "unknown"),
-                "score": round(1 - dist, 4),  # cosine similarity
+                "score": round(1 - dist, 4),   # cosine distance → similarity
                 "metadata": meta,
             })
         return chunks
 
     except Exception as e:
         print(f"⚠️  ChromaDB query failed: {e}")
-        # Fallback: return empty (abstain)
         return []
 
 
@@ -135,28 +162,25 @@ def run(state: dict) -> dict:
     Returns:
         Updated AgentState với retrieved_chunks và retrieved_sources
     """
-    task = state.get("task", "")
-    top_k = state.get("retrieval_top_k", DEFAULT_TOP_K)
+    task    = state.get("task", "")
+    top_k   = state.get("retrieval_top_k", DEFAULT_TOP_K)
 
     state.setdefault("workers_called", [])
     state.setdefault("history", [])
-
     state["workers_called"].append(WORKER_NAME)
 
-    # Log worker IO (theo contract)
     worker_io = {
         "worker": WORKER_NAME,
-        "input": {"task": task, "top_k": top_k},
+        "input":  {"task": task, "top_k": top_k},
         "output": None,
-        "error": None,
+        "error":  None,
     }
 
     try:
-        chunks = retrieve_dense(task, top_k=top_k)
-
+        chunks  = retrieve_dense(task, top_k=top_k)
         sources = list({c["source"] for c in chunks})
 
-        state["retrieved_chunks"] = chunks
+        state["retrieved_chunks"]  = chunks
         state["retrieved_sources"] = sources
 
         worker_io["output"] = {
@@ -169,14 +193,105 @@ def run(state: dict) -> dict:
 
     except Exception as e:
         worker_io["error"] = {"code": "RETRIEVAL_FAILED", "reason": str(e)}
-        state["retrieved_chunks"] = []
+        state["retrieved_chunks"]  = []
         state["retrieved_sources"] = []
         state["history"].append(f"[{WORKER_NAME}] ERROR: {e}")
 
-    # Ghi worker IO vào state để trace
     state.setdefault("worker_io_logs", []).append(worker_io)
-
     return state
+
+
+# ─────────────────────────────────────────────
+# Index helper — chạy 1 lần để build ChromaDB
+# ─────────────────────────────────────────────
+
+def build_index(docs_dir: str = None):
+    """
+    Build ChromaDB index từ thư mục data/docs/.
+    Chạy 1 lần trước khi dùng retrieval.
+
+    Usage:
+        python workers/retrieval.py --index
+    """
+    import chromadb
+    from sentence_transformers import SentenceTransformer
+
+    _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if docs_dir is None:
+        docs_dir = os.path.join(_root, "data", "docs")
+
+    chroma_path = os.path.join(_root, "chroma_db")
+
+    print(f"[index] docs_dir  : {docs_dir}")
+    print(f"[index] chroma_db : {chroma_path}")
+
+    if not os.path.isdir(docs_dir):
+        print(f"❌  Thư mục '{docs_dir}' không tồn tại.")
+        print(f"    Tạo thư mục và đặt các file .txt vào đó.")
+        return
+
+    client = chromadb.PersistentClient(path=chroma_path)
+    # Xoá collection cũ nếu có để re-index sạch
+    try:
+        client.delete_collection(CHROMA_COLLECTION)
+        print(f"[index] Deleted old collection '{CHROMA_COLLECTION}'")
+    except Exception:
+        pass
+
+    collection = client.create_collection(
+        CHROMA_COLLECTION,
+        metadata={"hnsw:space": "cosine"}
+    )
+
+    model = SentenceTransformer("all-MiniLM-L6-v2")
+
+    doc_ids, doc_texts, doc_metas, doc_embeddings = [], [], [], []
+
+    for fname in sorted(os.listdir(docs_dir)):
+        if not fname.endswith(".txt"):
+            continue
+        fpath = os.path.join(docs_dir, fname)
+        with open(fpath, encoding="utf-8") as f:
+            content = f.read().strip()
+
+        if not content:
+            print(f"  ⚠️  {fname} rỗng — bỏ qua")
+            continue
+
+        # Chunk đơn giản: chia theo đoạn (2 newlines), tối đa 500 ký tự
+        paragraphs = [p.strip() for p in content.split("\n\n") if p.strip()]
+        chunks = []
+        current = ""
+        for para in paragraphs:
+            if len(current) + len(para) < 500:
+                current += (" " if current else "") + para
+            else:
+                if current:
+                    chunks.append(current)
+                current = para
+        if current:
+            chunks.append(current)
+
+        for i, chunk in enumerate(chunks):
+            chunk_id = f"{fname}__chunk{i}"
+            embedding = model.encode([chunk])[0].tolist()
+            doc_ids.append(chunk_id)
+            doc_texts.append(chunk)
+            doc_metas.append({"source": fname, "chunk_index": i})
+            doc_embeddings.append(embedding)
+
+        print(f"  ✅  {fname} → {len(chunks)} chunks")
+
+    if doc_ids:
+        collection.add(
+            ids=doc_ids,
+            documents=doc_texts,
+            metadatas=doc_metas,
+            embeddings=doc_embeddings,
+        )
+        print(f"\n[index] ✅ Indexed {len(doc_ids)} chunks into '{CHROMA_COLLECTION}'")
+    else:
+        print("[index] ❌ Không có chunks nào được index.")
 
 
 # ─────────────────────────────────────────────
@@ -184,9 +299,16 @@ def run(state: dict) -> dict:
 # ─────────────────────────────────────────────
 
 if __name__ == "__main__":
-    print("=" * 50)
+    import sys
+
+    if "--index" in sys.argv:
+        build_index()
+        sys.exit(0)
+
+    print("=" * 55)
     print("Retrieval Worker — Standalone Test")
-    print("=" * 50)
+    print("(Chạy với --index để build ChromaDB index trước)")
+    print("=" * 55)
 
     test_queries = [
         "SLA ticket P1 là bao lâu?",

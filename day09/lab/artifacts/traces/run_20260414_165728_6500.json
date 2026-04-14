@@ -1,0 +1,111 @@
+{
+  "task": "Nhân viên được làm remote tối đa mấy ngày mỗi tuần?",
+  "route_reason": "no specific keyword matched → default retrieval",
+  "risk_high": false,
+  "needs_tool": false,
+  "hitl_triggered": false,
+  "retrieved_chunks": [
+    {
+      "text": "Hotline: ext. 9000 (8:00 - 18:00, Thứ 2 - Thứ 6)\nEmail: helpdesk@company.internal\nJira: project IT-SUPPORT\nSlack: #it-helpdesk\nEmergency (ngoài giờ): ext. 9999",
+      "source": "support/helpdesk-faq.md",
+      "score": 0.2356,
+      "metadata": {
+        "access": "internal",
+        "department": "IT",
+        "effective_date": "2026-01-20",
+        "source": "support/helpdesk-faq.md",
+        "section": "Section 6: Liên hệ IT Helpdesk"
+      }
+    },
+    {
+      "text": "Email: cs-refund@company.internal\nHotline nội bộ: ext. 1234\nGiờ làm việc: Thứ 2 - Thứ 6, 8:00 - 17:30",
+      "source": "policy/refund-v4.pdf",
+      "score": 0.2229,
+      "metadata": {
+        "effective_date": "2026-02-01",
+        "section": "Điều 6: Liên hệ và hỗ trợ",
+        "department": "CS",
+        "access": "internal",
+        "source": "policy/refund-v4.pdf"
+      }
+    },
+    {
+      "text": "Email: hr@company.internal\nHotline: ext. 2000\nHR Portal: https://hr.company.internal\nGiờ làm việc: Thứ 2 - Thứ 6, 8:30 - 17:30",
+      "source": "hr/leave-policy-2026.pdf",
+      "score": 0.2205,
+      "metadata": {
+        "source": "hr/leave-policy-2026.pdf",
+        "department": "HR",
+        "effective_date": "2026-01-01",
+        "section": "Phần 5: Liên hệ HR",
+        "access": "internal"
+      }
+    }
+  ],
+  "retrieved_sources": [
+    "hr/leave-policy-2026.pdf",
+    "support/helpdesk-faq.md",
+    "policy/refund-v4.pdf"
+  ],
+  "policy_result": {},
+  "mcp_tools_used": [],
+  "final_answer": "Không đủ thông tin trong tài liệu nội bộ.",
+  "sources": [
+    "hr/leave-policy-2026.pdf",
+    "support/helpdesk-faq.md",
+    "policy/refund-v4.pdf"
+  ],
+  "confidence": 0.3,
+  "history": [
+    "[supervisor] received task: Nhân viên được làm remote tối đa mấy ngày mỗi tuần?",
+    "[supervisor] decision: route=retrieval_worker | needs_tool=False | risk_high=False | reason=no specific keyword matched → default retrieval",
+    "[retrieval_worker] retrieved 3 chunks from ['hr/leave-policy-2026.pdf', 'support/helpdesk-faq.md', 'policy/refund-v4.pdf']",
+    "[synthesis_worker] answer generated, confidence=0.3, sources=['hr/leave-policy-2026.pdf', 'support/helpdesk-faq.md', 'policy/refund-v4.pdf']",
+    "[graph] ✅ completed | route=retrieval_worker | workers=['retrieval_worker', 'synthesis_worker'] | latency=5600ms"
+  ],
+  "workers_called": [
+    "retrieval_worker",
+    "synthesis_worker"
+  ],
+  "supervisor_route": "retrieval_worker",
+  "latency_ms": 5600,
+  "run_id": "run_20260414_165728_6500",
+  "timestamp": "2026-04-14T16:57:28.650044",
+  "worker_io_logs": [
+    {
+      "worker": "retrieval_worker",
+      "input": {
+        "task": "Nhân viên được làm remote tối đa mấy ngày mỗi tuần?",
+        "top_k": 3
+      },
+      "output": {
+        "chunks_count": 3,
+        "sources": [
+          "hr/leave-policy-2026.pdf",
+          "support/helpdesk-faq.md",
+          "policy/refund-v4.pdf"
+        ]
+      },
+      "error": null
+    },
+    {
+      "worker": "synthesis_worker",
+      "input": {
+        "task": "Nhân viên được làm remote tối đa mấy ngày mỗi tuần?",
+        "chunks_count": 3,
+        "has_policy": false
+      },
+      "output": {
+        "answer_length": 41,
+        "sources": [
+          "hr/leave-policy-2026.pdf",
+          "support/helpdesk-faq.md",
+          "policy/refund-v4.pdf"
+        ],
+        "confidence": 0.3
+      },
+      "error": null
+    }
+  ],
+  "question_id": "q05"
+}

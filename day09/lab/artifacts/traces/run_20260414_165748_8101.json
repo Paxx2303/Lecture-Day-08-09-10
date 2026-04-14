@@ -1,0 +1,110 @@
+{
+  "task": "ERR-403-AUTH là lỗi gì và cách xử lý?",
+  "route_reason": "unknown_error_code + risk_high → human review required [unknown_error_code_detected] | unknown_error_code_detected | human_approved → retrieval_worker",
+  "risk_high": true,
+  "needs_tool": false,
+  "hitl_triggered": true,
+  "retrieved_chunks": [
+    {
+      "text": "Bước 1: Nhân viên gửi yêu cầu nghỉ phép qua hệ thống HR Portal (https://hr.company.internal) ít nhất 3 ngày làm việc trước ngày nghỉ.\nBước 2: Line Manager phê duyệt hoặc từ chối trong vòng 1 ngày làm việc.\nBước 3: Nhân viên nhận thông báo qua email sau khi được phê duyệt.\n\nTrường hợp khẩn cấp: Có thể gửi yêu cầu muộn hơn nhưng phải được Line Manager đồng ý qua tin nhắn trực tiếp.",
+      "source": "hr/leave-policy-2026.pdf",
+      "score": 0.1621,
+      "metadata": {
+        "access": "internal",
+        "source": "hr/leave-policy-2026.pdf",
+        "department": "HR",
+        "effective_date": "2026-01-01",
+        "section": "Phần 2: Quy trình xin nghỉ phép"
+      }
+    },
+    {
+      "text": "Bước 1: Nhân viên tạo Access Request ticket trên Jira (project IT-ACCESS).\nBước 2: Line Manager phê duyệt yêu cầu trong 1 ngày làm việc.\nBước 3: IT Admin kiểm tra compliance và cấp quyền.\nBước 4: IT Security review với Level 3 và Level 4.\nBước 5: Nhân viên nhận thông báo qua email khi quyền được cấp.",
+      "source": "it/access-control-sop.md",
+      "score": 0.1604,
+      "metadata": {
+        "source": "it/access-control-sop.md",
+        "department": "IT Security",
+        "section": "Section 3: Quy trình yêu cầu cấp quyền",
+        "effective_date": "2026-01-01",
+        "access": "internal"
+      }
+    },
+    {
+      "text": "Email: hr@company.internal\nHotline: ext. 2000\nHR Portal: https://hr.company.internal\nGiờ làm việc: Thứ 2 - Thứ 6, 8:30 - 17:30",
+      "source": "hr/leave-policy-2026.pdf",
+      "score": 0.1488,
+      "metadata": {
+        "source": "hr/leave-policy-2026.pdf",
+        "department": "HR",
+        "effective_date": "2026-01-01",
+        "section": "Phần 5: Liên hệ HR",
+        "access": "internal"
+      }
+    }
+  ],
+  "retrieved_sources": [
+    "hr/leave-policy-2026.pdf",
+    "it/access-control-sop.md"
+  ],
+  "policy_result": {},
+  "mcp_tools_used": [],
+  "final_answer": "Không đủ thông tin trong tài liệu nội bộ.",
+  "sources": [
+    "hr/leave-policy-2026.pdf",
+    "it/access-control-sop.md"
+  ],
+  "confidence": 0.3,
+  "history": [
+    "[supervisor] received task: ERR-403-AUTH là lỗi gì và cách xử lý?",
+    "[supervisor] decision: route=human_review | needs_tool=False | risk_high=True | reason=unknown_error_code + risk_high → human review required [unknown_error_code_detected] | unknown_error_code_detected",
+    "[human_review] HITL triggered — awaiting human input (lab: auto-approve)",
+    "[human_review] auto-approved → routing to retrieval_worker",
+    "[retrieval_worker] retrieved 3 chunks from ['hr/leave-policy-2026.pdf', 'it/access-control-sop.md']",
+    "[synthesis_worker] answer generated, confidence=0.3, sources=['hr/leave-policy-2026.pdf', 'it/access-control-sop.md']",
+    "[graph] ✅ completed | route=retrieval_worker | workers=['human_review', 'retrieval_worker', 'synthesis_worker'] | latency=4558ms"
+  ],
+  "workers_called": [
+    "human_review",
+    "retrieval_worker",
+    "synthesis_worker"
+  ],
+  "supervisor_route": "retrieval_worker",
+  "latency_ms": 4558,
+  "run_id": "run_20260414_165748_8101",
+  "timestamp": "2026-04-14T16:57:48.810139",
+  "worker_io_logs": [
+    {
+      "worker": "retrieval_worker",
+      "input": {
+        "task": "ERR-403-AUTH là lỗi gì và cách xử lý?",
+        "top_k": 3
+      },
+      "output": {
+        "chunks_count": 3,
+        "sources": [
+          "hr/leave-policy-2026.pdf",
+          "it/access-control-sop.md"
+        ]
+      },
+      "error": null
+    },
+    {
+      "worker": "synthesis_worker",
+      "input": {
+        "task": "ERR-403-AUTH là lỗi gì và cách xử lý?",
+        "chunks_count": 3,
+        "has_policy": false
+      },
+      "output": {
+        "answer_length": 41,
+        "sources": [
+          "hr/leave-policy-2026.pdf",
+          "it/access-control-sop.md"
+        ],
+        "confidence": 0.3
+      },
+      "error": null
+    }
+  ],
+  "question_id": "q09"
+}

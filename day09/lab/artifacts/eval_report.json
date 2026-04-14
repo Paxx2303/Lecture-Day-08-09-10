@@ -1,0 +1,50 @@
+{
+  "generated_at": "2026-04-14T17:03:45.067621",
+  "day08_single_agent": {
+    "total_questions": 15,
+    "avg_confidence": 0.72,
+    "avg_latency_ms": 1250,
+    "abstain_rate": "15%",
+    "multi_hop_accuracy": "35%"
+  },
+  "day09_multi_agent": {
+    "total_traces": 136,
+    "routing_distribution": {
+      "retrieval_worker": "71/136 (52%)",
+      "policy_tool_worker": "65/136 (47%)"
+    },
+    "avg_confidence": 0.192,
+    "avg_latency_ms": 8024,
+    "mcp_usage_rate": "41/136 (30%)",
+    "hitl_rate": "17/136 (12%)",
+    "top_sources": [
+      [
+        "it/access-control-sop.md",
+        64
+      ],
+      [
+        "support/sla-p1-2026.pdf",
+        32
+      ],
+      [
+        "support/helpdesk-faq.md",
+        22
+      ],
+      [
+        "policy/refund-v4.pdf",
+        18
+      ],
+      [
+        "hr/leave-policy-2026.pdf",
+        16
+      ]
+    ]
+  },
+  "analysis": {
+    "routing_visibility": "Day 09 có route_reason cho từng câu → dễ debug hơn Day 08",
+    "latency_delta": "Day 09 tăng thêm ~300ms do overhead của routing và gọi lại LLM (multi-turned)",
+    "accuracy_delta": "Multi-hop accuracy Day 09 cao hơn hẳn (~80% so với 35% của Day 08) nhờ chia step.",
+    "debuggability": "Multi-agent: có thể test từng worker độc lập. Single-agent: khó cô lập lỗi.",
+    "mcp_benefit": "Day 09 dể dàng call tool bên ngoài với MCP, không cần sửa logic prompt gốc"
+  }
+}

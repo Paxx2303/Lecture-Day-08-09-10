@@ -1,0 +1,111 @@
+{
+  "task": "SLA xử lý ticket P1 là bao lâu?",
+  "route_reason": "retrieval_priority_keywords=['sla', 'ticket', 'p1']",
+  "risk_high": false,
+  "needs_tool": false,
+  "hitl_triggered": false,
+  "retrieved_chunks": [
+    {
+      "text": "Ticket system: Jira (project IT-SUPPORT)\nSlack channel: #incident-p1, #incident-p2\nPagerDuty: Tự động nhắn on-call khi P1 ticket mới\nHotline on-call: ext. 9999 (24/7)",
+      "source": "support/sla-p1-2026.pdf",
+      "score": 0.2433,
+      "metadata": {
+        "department": "IT",
+        "access": "internal",
+        "effective_date": "2026-01-15",
+        "source": "support/sla-p1-2026.pdf",
+        "section": "Phần 4: Công cụ và kênh liên lạc"
+      }
+    },
+    {
+      "text": "Ticket system: Jira (project IT-ACCESS)\nIAM system: Okta\nAudit log: Splunk\nEmail: it-access@company.internal",
+      "source": "it/access-control-sop.md",
+      "score": 0.2359,
+      "metadata": {
+        "access": "internal",
+        "department": "IT Security",
+        "source": "it/access-control-sop.md",
+        "section": "Section 7: Công cụ liên quan",
+        "effective_date": "2026-01-01"
+      }
+    },
+    {
+      "text": "Bước 1: Khách hàng gửi yêu cầu qua hệ thống ticket nội bộ với category \"Refund Request\".\nBước 2: CS Agent xem xét trong vòng 1 ngày làm việc và xác nhận điều kiện đủ điều kiện.\nBước 3: Nếu đủ điều kiện, chuyển yêu cầu sang Finance Team để xử lý hoàn tiền.\nBước 4: Finance Team xử lý trong 3-5 ngày làm việc và thông báo kết quả cho khách hàng.",
+      "source": "policy/refund-v4.pdf",
+      "score": 0.1827,
+      "metadata": {
+        "department": "CS",
+        "effective_date": "2026-02-01",
+        "source": "policy/refund-v4.pdf",
+        "access": "internal",
+        "section": "Điều 4: Quy trình xử lý yêu cầu hoàn tiền"
+      }
+    }
+  ],
+  "retrieved_sources": [
+    "policy/refund-v4.pdf",
+    "it/access-control-sop.md",
+    "support/sla-p1-2026.pdf"
+  ],
+  "policy_result": {},
+  "mcp_tools_used": [],
+  "final_answer": "Không đủ thông tin trong tài liệu nội bộ.",
+  "sources": [
+    "policy/refund-v4.pdf",
+    "it/access-control-sop.md",
+    "support/sla-p1-2026.pdf"
+  ],
+  "confidence": 0.3,
+  "history": [
+    "[supervisor] received task: SLA xử lý ticket P1 là bao lâu?",
+    "[supervisor] decision: route=retrieval_worker | needs_tool=False | risk_high=False | reason=retrieval_priority_keywords=['sla', 'ticket', 'p1']",
+    "[retrieval_worker] retrieved 3 chunks from ['policy/refund-v4.pdf', 'it/access-control-sop.md', 'support/sla-p1-2026.pdf']",
+    "[synthesis_worker] answer generated, confidence=0.3, sources=['policy/refund-v4.pdf', 'it/access-control-sop.md', 'support/sla-p1-2026.pdf']",
+    "[graph] ✅ completed | route=retrieval_worker | workers=['retrieval_worker', 'synthesis_worker'] | latency=15006ms"
+  ],
+  "workers_called": [
+    "retrieval_worker",
+    "synthesis_worker"
+  ],
+  "supervisor_route": "retrieval_worker",
+  "latency_ms": 15006,
+  "run_id": "run_20260414_170209_0613",
+  "timestamp": "2026-04-14T17:02:09.061309",
+  "worker_io_logs": [
+    {
+      "worker": "retrieval_worker",
+      "input": {
+        "task": "SLA xử lý ticket P1 là bao lâu?",
+        "top_k": 3
+      },
+      "output": {
+        "chunks_count": 3,
+        "sources": [
+          "policy/refund-v4.pdf",
+          "it/access-control-sop.md",
+          "support/sla-p1-2026.pdf"
+        ]
+      },
+      "error": null
+    },
+    {
+      "worker": "synthesis_worker",
+      "input": {
+        "task": "SLA xử lý ticket P1 là bao lâu?",
+        "chunks_count": 3,
+        "has_policy": false
+      },
+      "output": {
+        "answer_length": 41,
+        "sources": [
+          "policy/refund-v4.pdf",
+          "it/access-control-sop.md",
+          "support/sla-p1-2026.pdf"
+        ],
+        "confidence": 0.3
+      },
+      "error": null
+    }
+  ],
+  "question_id": "q01"
+}
